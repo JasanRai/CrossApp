@@ -1,12 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
+// custom component
+import {TextBox} from './component/TextBox';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Hello World!</Text>
+      <Text style ={styles.greeting}>Hello World!</Text>
+      <Button title="Click me" color="blue"/>
       <StatusBar style="auto" />
+      <TextBox color="green" size="24" text="Custom Component" />
+      <TextBox color="purple" size="18" text="Custom Text" />
     </View>
   );
 }
