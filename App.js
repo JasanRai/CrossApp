@@ -1,41 +1,58 @@
 import { StatusBar } from 'expo-status-bar';
 import React,{Component} from 'react';
 import { StyleSheet, Text, View, Button, SafeAreaView, FlatList, TextInput, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+
+import RNPickerSelect from 'react-native-picker-select';
 // custom component
 import {TextBox} from './component/TextBox';
 
 import {Item} from './component/Item';
 
 export default class App extends Component {
-state ={
-  expenseAmount : 0,
-  expenseCategory: ''
-}
+  state ={
+    expenseAmount : 0,
+    expenseCategory: ''
+  }
 
-listData = []
+  listData = []
+
+  dropdownItems= [
+    { label: 'Food', value: 'food'},
+    { label: 'Transport', value: 'transport' },
+    { label: 'Rent', value: 'rent' },
+    { label: 'Grocery', value: 'grocery' },
+    { label: 'Entertainment', value: 'entertainment' },
+
+  ]
 
   render() {
-  return (
-    <SafeAreaView>
-      <View style ={styles.main}>
-        <Text>Add your expense</Text>
-        <TextInput
-        style={styles.input}
-        placeholder="$ Amount"
-        onChangeText={text =>this.setState({expenseAmount: parseFloat(text) })}
-        keyboardType= "number-pad"/>
-        <TextInput
-        style={styles.input}
-        placeholder="Category"
-        onChangeText={text => this.setState({expenseCategory: text }) }
-        />
-      </View>
+    return (
+      <SafeAreaView>
+        <View style ={styles.main}>
+          <Text>Add your expense</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="$ Amount"
+            onChangeText={text =>this.setState({expenseAmount: parseFloat(text) })}
+            keyboardType= "number-pad"/>
+          {/* <TextInput
+            style={styles.input}
+            placeholder="Category"
+            onChangeText={text => this.setState({expenseCategory: text }) }
+          /> */}
+          <RNPickerSelect
+            items = {this.dropdownItems}
+            value = {this.state.expenseCategory}
+            onValueChange = {value => this.setState({expenseCategory: value}) }
+            useNativeAndroidPickerStyle = {false}
+            />
+        </View>
       
-      <View>
-        <TouchableOpacity style ={styles.button} onPress = {this.addItem}>
-          <Text style = {styles.buttonText}>Add</Text>
-        </TouchableOpacity>
-      </View>
+        <View>
+          <TouchableOpacity style ={styles.button} onPress = {this.addItem}>
+           <Text style = {styles.buttonText}>Add</Text>
+          </TouchableOpacity>
+        </View>
 
       <FlatList
         data={this.listData}
