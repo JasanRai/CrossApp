@@ -13,6 +13,8 @@ export default class App extends Component {
     expenseAmount : 0,
     expenseCategory: '',
     validInput: false,
+    showToast: false,
+    message: '',
   }
 
   listData = []
@@ -28,7 +30,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <SafeAreaView style={{flex:1}}>
+      <SafeAreaView style={{flex:1, position: 'relative'}}>
         <View style ={styles.main}>
           <Text>Add your expense</Text>
           <TextInput
@@ -65,6 +67,11 @@ export default class App extends Component {
            <Text style = {styles.buttonText}>Add</Text>
           </TouchableOpacity>
         </View>
+        <View style = { [{
+          display: this.state.showToast ? 'flex' : 'none'
+        }, styles.toast]}>
+          <Text style = {styles.toastMessage}> {this.state.message}</Text>
+        </View>
       <View style = {{flex:1}}>
         <FlatList
           data={this.listData}
@@ -99,6 +106,7 @@ export default class App extends Component {
           this.listData.splice( index, 1 )
       }
     })
+    this.showToast('item deleted',2000)
     this.saveList()
     this.setState({expenseAmount:0})
   
@@ -115,6 +123,7 @@ export default class App extends Component {
         category: this.state.expenseCategory
       }
       this.listData.push(listItem)
+      this.showToast('item added', 2000)
       this.sortlist()
       this.saveList()
       this.setState({expenseAmount:0, expenseCategory: null, validInput: false})
@@ -163,6 +172,16 @@ loadList = async () => {
   }
 }
 
+showToast = ( message, duration ) => {
+  this.setState({message: message}, () => {
+    this.setState({showToast:true})
+  })
+  const timer = setTimeout(
+    () => {this.setState({showToast: false}) },
+    duration
+  )
+}
+
 }
 
 const colors ={
@@ -195,6 +214,22 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryDisabled,
     marginVertical : 15
   },
+  listView : {
+    flex: 1,
+  },
+  toast: {
+    backgroundColor:'black',
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    padding: 5,
+    borderRadius : 5,
+  },
+  toastMessage: {
+    color: 'white',
+    textAlign : 'center',
+  }
 })
 
 const pickerStyle = StyleSheet.create({
