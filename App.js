@@ -11,7 +11,8 @@ import {Item} from './component/Item';
 export default class App extends Component {
   state ={
     expenseAmount : 0,
-    expenseCategory: ''
+    expenseCategory: '',
+    validInput: false,
   }
 
   listData = []
@@ -33,8 +34,12 @@ export default class App extends Component {
           <TextInput
             style={styles.input}
             placeholder="$ Amount"
-            onChangeText={text =>this.setState({expenseAmount: parseFloat(text) })}
-            keyboardType= "number-pad"/>
+            onChangeText={text =>this.setState({expenseAmount: parseFloat(text) },
+              () => { this.validate() }
+            ) }
+            keyboardType= "number-pad"
+            ref={(input) => (this._textInput = input)}
+            />
           {/* <TextInput
             style={styles.input}
             placeholder="Category"
@@ -43,13 +48,20 @@ export default class App extends Component {
           <RNPickerSelect
             items = {this.dropdownItems}
             value = {this.state.expenseCategory}
-            onValueChange = {value => this.setState({expenseCategory: value}) }
+            onValueChange = {value => this.setState({expenseCategory: value},
+              () => { this.validate() }
+              ) }
             useNativeAndroidPickerStyle = {false}
+            style={pickerStyle}
+            placeholder={pickerPlaceholder}
             />
         </View>
       
         <View>
-          <TouchableOpacity style ={styles.button} onPress = {this.addItem}>
+          <TouchableOpacity 
+          style ={this.state.validInput ? styles.button : styles.buttonDisabled } 
+          onPress = {this.addItem}
+          disabled = {!this.state.validInput ? true : false}>
            <Text style = {styles.buttonText}>Add</Text>
           </TouchableOpacity>
         </View>
@@ -79,29 +91,62 @@ export default class App extends Component {
         category: this.state.expenseCategory
       }
       this.listData.push(listItem)
-      console.log('adding')
-      this.setState({expenseAmount:0})
+      this.setState({expenseAmount:0, expenseCategory: null, validInput: false})
+      this._textInput.clear()
+      this._textInput.focus()
       // this.setState({expenseAmount:0})
+  }
+
+  validate = () => {
+    if( this.state.expenseAmount > 0 && this.state.expenseCategory )
+    {
+      this.setState({validInput:true})
+    }
   }
 }
 
 const colors ={
-  primary : 'hsla(330, 38%, 65%, 1)'
+  primary : 'hsla(330, 38%, 65%, 1)',
+  primaryDisabled: 'hsla(330, 38%, 80%,1)',
+}
+
+const pickerPlaceholder = {
+  label: 'select category', value: null, color: 'black'
 }
 
 const styles = StyleSheet.create({
   input: {
-  paddingHorizontal : 10,
+  padding : 10,
   borderColor:'black',
   borderWidth: 1,
   marginVertical : 15
   },
   button:{
     padding: 15,
-    backgroundColor: colors.primary
+    backgroundColor: colors.primary,
+    marginVertical : 15
   },
   buttonText:{
     color: 'white',
     textAlign: 'center'
+  },
+  buttonDisabled: {
+    padding: 15,
+    backgroundColor: colors.primaryDisabled,
+    marginVertical : 15
+  },
+})
+
+const pickerStyle = StyleSheet.create({
+  inputIOS: {
+    padding: 10,
+    borderColor: colors.primary,
+    borderWidth: 1,
+  },
+  inputAndroid: {
+    padding: 10,
+    borderColor: colors.primary,
+    borderWidth: 1,
   }
-});
+
+})
