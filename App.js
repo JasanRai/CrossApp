@@ -10,8 +10,9 @@ import {Item} from './component/Item';
 
 export default class App extends Component {
   state ={
-    expenseAmount : 0,
-    expenseCategory: '',
+    numberSet : 0,
+    nameWorkout : '',
+    numberRep : '',
     validInput: false,
     showToast: false,
     message: '',
@@ -20,11 +21,11 @@ export default class App extends Component {
   listData = []
 
   dropdownItems= [
-    { label: 'Food', value: 'food'},
-    { label: 'Transport', value: 'transport' },
-    { label: 'Rent', value: 'rent' },
-    { label: 'Grocery', value: 'grocery' },
-    { label: 'Entertainment', value: 'entertainment' },
+    { label: '3-6 Rep', value: '3-6 Rep'},
+    { label: '6-9 Rep', value: '6-9 Rep' },
+    { label: '9-12 Rep', value: '9-12 Rep'},
+    { label: '12-15 Rep', value: '12-15 Rep' },
+    { label: '15-20 Rep', value: '15-20 Rep' },
 
   ]
 
@@ -32,25 +33,28 @@ export default class App extends Component {
     return (
       <SafeAreaView style={{flex:1, position: 'relative'}}>
         <View style ={styles.main}>
-          <Text>Add your expense</Text>
+          <Text>Create your own sets of Workout</Text>
           <TextInput
             style={styles.input}
-            placeholder="$ Amount"
-            onChangeText={text =>this.setState({expenseAmount: parseFloat(text) },
+            placeholder="Workout Name"
+            onChangeText={text => this.setState({nameWorkout: text },
+              () => { this.validate() }) }
+              ref={(input) => (this._textInput = input)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Number of Sets"
+            onChangeText={text =>this.setState({numberSet: parseInt(text) },
               () => { this.validate() }
             ) }
             keyboardType= "number-pad"
-            ref={(input) => (this._textInput = input)}
+            ref={(inputNo) => (this._textInputNo = inputNo)}
             />
-          {/* <TextInput
-            style={styles.input}
-            placeholder="Category"
-            onChangeText={text => this.setState({expenseCategory: text }) }
-          /> */}
+         
           <RNPickerSelect
             items = {this.dropdownItems}
-            value = {this.state.expenseCategory}
-            onValueChange = {value => this.setState({expenseCategory: value},
+            value = {this.state.numberRep}
+            onValueChange = {value => this.setState({numberRep: value},
               () => { this.validate() }
               ) }
             useNativeAndroidPickerStyle = {false}
@@ -77,7 +81,7 @@ export default class App extends Component {
           data={this.listData}
           renderItem={this.renderList}
           keyExtractor={item=> item.id}
-          extraData={this.state.expenseAmount}
+          extraData={this.state.nameWorkout}
         />
       </View>
     </SafeAreaView>
@@ -90,8 +94,9 @@ export default class App extends Component {
 
   renderList = ({item}) => (
     <Item 
-    amount={item.amount} 
-    category={item.category} 
+    name={item.name} 
+    set={item.set}
+    rep={item.rep} 
     id={item.id}
     delete={ this.removeItem } />
   )
@@ -108,32 +113,35 @@ export default class App extends Component {
     })
     this.showToast('item deleted',2000)
     this.saveList()
-    this.setState({expenseAmount:0})
+    this.setState({nameWorkout:''})
   
   }
   addItem = () => {
-    if(isNaN(this.state.expenseAmount) || this.state.expenseAmount == 0 || this.state.expenseCategory == '')
+    if(this.state.nameWorkout == '' || this.state.numberSet == 0 || this.state.numberRep =='')
     {
       return;
     }
       let itemId = new Date().getTime().toString()
       let listItem = {
         id: itemId,
-        amount: this.state.expenseAmount,
-        category: this.state.expenseCategory
+        name: this.state.nameWorkout,
+        set: this.state.numberSet,
+        rep: this.state.numberRep,
       }
+    
       this.listData.push(listItem)
       this.showToast('item added', 2000)
       this.sortlist()
       this.saveList()
-      this.setState({expenseAmount:0, expenseCategory: null, validInput: false})
+      this.setState({nameWorkout: '', numberSet: 0, numberRep: null, validInput: false})
       this._textInput.clear()
+      this._textInputNo.clear()
       this._textInput.focus()
-      // this.setState({expenseAmount:0})
+     
   }
 
   validate = () => {
-    if( this.state.expenseAmount > 0 && this.state.expenseCategory )
+    if( this.state.nameWorkout != '' && this.state.numberSet > 0 && this.state.numberRep )
     {
       this.setState({validInput:true})
     }
@@ -194,6 +202,8 @@ const pickerPlaceholder = {
 }
 
 const styles = StyleSheet.create({
+
+
   input: {
   padding : 10,
   borderColor:'black',

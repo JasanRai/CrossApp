@@ -5,8 +5,9 @@ export const Item = (props) => {
     return(
         <View style ={itemStyles.item}>
             <View style = {itemStyles.row}>
-                <Text style={itemStyles.text}>{props.category}</Text>
-                <Text style={itemStyles.text}>{props.amount}</Text>
+                <Text style={itemStyles.text}>{props.set}</Text>
+                <Text style={itemStyles.text}>{props.name}</Text>
+                <Text style={itemStyles.text}>{props.rep}</Text>
             </View>
             <TouchableOpacity onPress ={ () =>{props.delete( props.id)} }>
                 <Image style ={itemStyles.icon} source={require('../assets/times-circle-solid.png')} />
