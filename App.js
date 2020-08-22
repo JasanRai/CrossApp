@@ -77,16 +77,32 @@ export default class App extends Component {
   )
   }
   renderList = ({item}) => (
-    <Item amount={item.amount} category={item.category} />
+    <Item 
+    amount={item.amount} 
+    category={item.category} 
+    id={item.id}
+    delete={ this.removeItem } />
   )
+
+  removeItem = (itemId) =>{
+   console.log(itemId)
+    this.listData.forEach((item, index) => {
+      if(item.id == itemId)
+      {
+          this.listData.splice( index, 1 )
+      }
+    })
+    this.setState({expenseAmount:0})
+  
+  }
   addItem = () => {
     if(isNaN(this.state.expenseAmount) || this.state.expenseAmount == 0 || this.state.expenseCategory == '')
     {
       return;
     }
-      let id = new Date().getTime().toString()
+      let itemId = new Date().getTime().toString()
       let listItem = {
-        id: id,
+        id: itemId,
         amount: this.state.expenseAmount,
         category: this.state.expenseCategory
       }
