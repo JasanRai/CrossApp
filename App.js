@@ -151,6 +151,10 @@ saveList = async () =>{
 loadList = async () => {
   try{
     let items = await AsyncStorage.getItem('data')
+    if(JSON.parse(items)) {
+      this.listData = JSON.parse(items)
+    }
+
     this.listData = JSON.parse(items)
     this.setState({expenseAmount:0})
   }
