@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React,{Component} from 'react';
-import { StyleSheet, Text, View, Button, SafeAreaView, FlatList, TextInput, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView, FlatList, TextInput, TouchableOpacity, AsyncStorage} from 'react-native';
 
 import RNPickerSelect from 'react-native-picker-select';
 // custom component
@@ -76,6 +76,11 @@ export default class App extends Component {
     </SafeAreaView>
   )
   }
+
+  componentDidMount() {
+    this.loadList()
+  }
+
   renderList = ({item}) => (
     <Item 
     amount={item.amount} 
@@ -83,6 +88,8 @@ export default class App extends Component {
     id={item.id}
     delete={ this.removeItem } />
   )
+
+ 
 
   removeItem = (itemId) =>{
    console.log(itemId)
@@ -92,6 +99,7 @@ export default class App extends Component {
           this.listData.splice( index, 1 )
       }
     })
+    this.saveList()
     this.setState({expenseAmount:0})
   
   }
@@ -108,6 +116,7 @@ export default class App extends Component {
       }
       this.listData.push(listItem)
       this.sortlist()
+      this.saveList()
       this.setState({expenseAmount:0, expenseCategory: null, validInput: false})
       this._textInput.clear()
       this._textInput.focus()
@@ -126,6 +135,30 @@ export default class App extends Component {
       return item2.id - item1.id
     } )
   }
+saveList = async () =>{
+  try {
+    await AsyncStorage.setItem(
+      'data',
+      JSON.stringify(this.listData)
+    )
+  }
+  catch(error) {
+      console.log(error)
+  }
+
+}
+
+loadList = async () => {
+  try{
+    let items = await AsyncStorage.getItem('data')
+    this.listData = JSON.parse(items)
+    this.setState({expenseAmount:0})
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
 }
 
 const colors ={
