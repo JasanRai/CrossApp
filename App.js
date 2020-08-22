@@ -117,7 +117,7 @@ export default class App extends Component {
   
   }
   addItem = () => {
-    if(this.state.nameWorkout == '' || this.state.numberSet == 0 || this.state.numberRep =='')
+    if(this.state.nameWorkout == '' || this.state.numberSet == 0 || this.state.numberRep == '')
     {
       return;
     }
@@ -173,7 +173,7 @@ loadList = async () => {
     }
 
     this.listData = JSON.parse(items)
-    this.setState({expenseAmount:0})
+    this.setState({nameWorkout:''})
   }
   catch (error) {
     console.log(error)
@@ -193,8 +193,8 @@ showToast = ( message, duration ) => {
 }
 
 const colors ={
-  primary : 'hsla(330, 38%, 65%, 1)',
-  primaryDisabled: 'hsla(330, 38%, 80%,1)',
+  primary : 'hsla(147, 38%, 65%, 1)',
+  primaryDisabled: 'hsla(147, 38%, 80%,1)',
 }
 
 const pickerPlaceholder = {
@@ -202,7 +202,6 @@ const pickerPlaceholder = {
 }
 
 const styles = StyleSheet.create({
-
 
   input: {
   padding : 10,
@@ -245,12 +244,12 @@ const styles = StyleSheet.create({
 const pickerStyle = StyleSheet.create({
   inputIOS: {
     padding: 10,
-    borderColor: colors.primary,
+    borderColor: 'black',
     borderWidth: 1,
   },
   inputAndroid: {
     padding: 10,
-    borderColor: colors.primary,
+    borderColor: 'black',
     borderWidth: 1,
   }
 
