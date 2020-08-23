@@ -238,6 +238,9 @@ const styles = StyleSheet.create({
   toastMessage: {
     color: 'white',
     textAlign : 'center',
+  },
+  main: {
+    paddingTop : 30,
   }
 })
 
@@ -251,6 +254,8 @@ const pickerStyle = StyleSheet.create({
     padding: 10,
     borderColor: 'black',
     borderWidth: 1,
-  }
+  },
+
+  
 
 })
